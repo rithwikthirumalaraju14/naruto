@@ -1,0 +1,5 @@
+# Netlify config for static birthday site
+[build]
+  publish = "."
+
+# No build command – static HTML, CSS, JS, and images only.

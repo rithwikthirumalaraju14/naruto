@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Birthday Chitti! 🍥</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;600;700;800&family=Permanent+Marker&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange: #F97316;
+      --orange-light: #FDBA74;
+      --orange-glow: rgba(249,115,22,0.4);
+      --blue: #3B82F6;
+      --blue-dark: #1E3A5F;
+      --chakra: #60A5FA;
+      --sage: #22C55E;
+      --red: #EF4444;
+      --scroll-bg: #F5E6C8;
+      --scroll-dark: #C8A050;
+      --metal: #9CA3AF;
+      --metal-light: #D1D5DB;
+      --deep: #0a0a14;
+      --section: #0f0f1e;
+      --card-bg: rgba(255,255,255,0.04);
+      --text: #FFF5E1;
+      --text-dim: rgba(255,245,225,0.5);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--deep);
+      color: var(--text);
+      overflow-x: hidden;
+      cursor: none;
+    }
+    body.no-scroll { overflow: hidden; }
+
+    canvas { position: fixed; inset: 0; pointer-events: none; }
+    #bg-canvas { z-index: 0; }
+    #fx-canvas { z-index: 50; }
+
+    /* ── Cursor ── */
+    #cursor-dot {
+      position: fixed; width: 10px; height: 10px;
+      background: var(--orange); border-radius: 50%;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 12px var(--orange-glow), 0 0 30px var(--orange-glow);
+      transition: width .15s, height .15s, background .2s;
+    }
+    #cursor-ring {
+      position: fixed; width: 36px; height: 36px;
+      border: 1.5px solid rgba(249,115,22,0.4);
+      border-radius: 50%; pointer-events: none; z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width .25s, height .25s;
+    }
+    .trail-dot {
+      position: fixed; border-radius: 50%; pointer-events: none;
+      z-index: 9990; transform: translate(-50%,-50%);
+      animation: trailFade .5s ease forwards;
+    }
+    @keyframes trailFade { to { opacity: 0; transform: translate(-50%,-50%) scale(0); } }
+
+    @media (hover: none) {
+      html, body { cursor: auto; }
+      #cursor-dot, #cursor-ring { display: none; }
+      button, a, .candle-btn, .gallery-item { cursor: pointer; }
+    }
+
+    /* ── INTRO GATE ── */
+    .intro {
+      position: fixed; inset: 0; z-index: 100;
+      background: var(--deep);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      transition: opacity .8s ease, transform .8s ease;
+    }
+    .intro.exit {
+      opacity: 0; transform: scale(1.15);
+      pointer-events: none;
+    }
+
+    .intro-symbol {
+      font-size: clamp(5rem, 15vw, 9rem);
+      opacity: 0; animation: symbolIn 1.2s ease .3s forwards;
+      filter: drop-shadow(0 0 40px var(--orange-glow));
+      user-select: none;
+    }
+    @keyframes symbolIn {
+      from { opacity:0; transform: scale(0) rotate(-180deg); }
+      to   { opacity:1; transform: scale(1) rotate(0deg); }
+    }
+
+    .intro-ring {
+      width: clamp(140px, 35vw, 220px);
+      height: clamp(140px, 35vw, 220px);
+      border: 2px solid rgba(249,115,22,0.3);
+      border-radius: 50%;
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      animation: ringPulse 2.5s ease-in-out infinite 1.5s;
+    }
+    @keyframes ringPulse {
+      0%, 100% { transform: translate(-50%,-50%) scale(1); opacity: .4; }
+      50%      { transform: translate(-50%,-50%) scale(1.2); opacity: 0; }
+    }
+
+    .mission-text {
+      text-align: center; margin-top: 2rem;
+      display: flex; flex-direction: column; gap: .6rem;
+    }
+    .mission-label {
+      font-family: 'Nunito', sans-serif; font-weight: 800;
+      font-size: clamp(.65rem, 2vw, .85rem);
+      letter-spacing: .5em; text-transform: uppercase;
+      color: var(--orange); opacity: 0;
+      animation: fadeUp .8s ease 1s forwards;
+    }
+    .mission-title {
+      font-family: 'Bangers', cursive;
+      font-size: clamp(2.5rem, 10vw, 5rem);
+      line-height: 1; letter-spacing: .05em;
+      background: linear-gradient(135deg, var(--orange-light), var(--orange), var(--red));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; opacity: 0;
+      animation: fadeUp .8s ease 1.4s forwards;
+    }
+    .mission-rank {
+      font-size: clamp(.6rem, 1.8vw, .75rem);
+      letter-spacing: .35em; color: var(--text-dim);
+      opacity: 0; animation: fadeUp .8s ease 1.8s forwards;
+    }
+    .accept-btn {
+      margin-top: 2.5rem; padding: 1rem 3rem;
+      background: transparent; border: 2px solid var(--orange);
+      color: var(--orange); font-family: 'Bangers', cursive;
+      font-size: 1.3rem; letter-spacing: .2em;
+      cursor: none; position: relative; overflow: hidden;
+      transition: color .3s, box-shadow .3s;
+      opacity: 0; animation: fadeUp .8s ease 2.2s forwards;
+    }
+    .accept-btn::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--orange); transform: scaleX(0);
+      transform-origin: left; transition: transform .4s ease; z-index: -1;
+    }
+    .accept-btn:hover { color: var(--deep); box-shadow: 0 0 30px var(--orange-glow); }
+    .accept-btn:hover::before { transform: scaleX(1); }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform: translateY(25px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+
+    /* ── MAIN CONTENT ── */
+    #main-content { position: relative; z-index: 2; }
+
+    .section {
+      min-height: 100vh; padding: clamp(3rem, 8vw, 6rem) clamp(1rem, 5vw, 3rem);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+
+    .section-title {
+      font-family: 'Bangers', cursive;
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      letter-spacing: .06em; text-align: center;
+      background: linear-gradient(90deg, var(--orange-light), var(--orange));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: 2.5rem;
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(40px);
+      transition: opacity .8s ease, transform .8s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── HERO ── */
+    .hero { text-align: center; gap: 1rem; }
+    .hero-sub {
+      font-weight: 800; font-size: clamp(.7rem, 2vw, .9rem);
+      letter-spacing: .5em; color: var(--chakra);
+    }
+    .hero-title {
+      font-family: 'Bangers', cursive;
+      font-size: clamp(4rem, 16vw, 10rem); line-height: .9;
+      letter-spacing: .04em;
+      background: linear-gradient(135deg, var(--orange-light) 0%, var(--orange) 40%, var(--red) 100%);
+      background-size: 200%;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: heroShimmer 4s ease infinite;
+      text-shadow: none;
+    }
+    @keyframes heroShimmer { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
+    /* ── Headband ── */
+    .headband-wrap {
+      position: relative; display: inline-block; margin: 1.5rem 0;
+    }
+    .headband-cloth {
+      position: absolute; top: 50%; height: 55%;
+      transform: translateY(-50%);
+      background: var(--blue-dark); z-index: 0;
+    }
+    .headband-cloth.left  { right: 90%; width: clamp(40px,12vw,120px); border-radius: 4px 0 0 4px; }
+    .headband-cloth.right { left: 90%;  width: clamp(40px,12vw,120px); border-radius: 0 4px 4px 0; }
+
+    .headband-plate {
+      position: relative; z-index: 1;
+      display: inline-flex; align-items: center; gap: .8rem;
+      background: linear-gradient(145deg, #5a5a6e, #8a8a9e, #c0c0d0, #a0a0b0, #70707e, #b0b0c0);
+      padding: .8rem 2.5rem; border: 2px solid #4B5563;
+      border-radius: 6px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.2);
+    }
+    .headband-symbol {
+      font-size: 1.8rem;
+      filter: drop-shadow(0 0 6px rgba(249,115,22,.4));
+    }
+    .headband-name {
+      font-family: 'Permanent Marker', cursive;
+      font-size: clamp(1.4rem, 5vw, 2.5rem);
+      color: #1a1a2e; letter-spacing: .08em;
+      text-shadow: 0 1px 0 rgba(255,255,255,.3);
+    }
+    .plate-screw {
+      position: absolute; width: 8px; height: 8px;
+      background: radial-gradient(circle at 35% 35%, var(--metal-light), #555);
+      border-radius: 50%; border: 1px solid #444;
+    }
+    .plate-screw.tl { top: 6px; left: 8px; }
+    .plate-screw.tr { top: 6px; right: 8px; }
+    .plate-screw.bl { bottom: 6px; left: 8px; }
+    .plate-screw.br { bottom: 6px; right: 8px; }
+
+    .hero-decree {
+      font-size: clamp(.85rem, 2.2vw, 1.1rem);
+      font-style: italic; color: var(--text-dim);
+      max-width: 500px; text-align: center; line-height: 1.6;
+    }
+
+    /* ── NINJA CARD ── */
+    .ninja-card {
+      background: linear-gradient(135deg, rgba(15,15,30,.95), rgba(30,58,95,.3));
+      border: 2px solid rgba(249,115,22,.3);
+      border-radius: 12px; overflow: hidden;
+      max-width: 600px; width: 90%;
+      box-shadow: 0 8px 40px rgba(0,0,0,.5);
+      transition: border-color .3s, box-shadow .3s;
+    }
+    .ninja-card:hover {
+      border-color: var(--orange);
+      box-shadow: 0 8px 50px var(--orange-glow);
+    }
+    .ninja-card-header {
+      background: linear-gradient(90deg, var(--orange), var(--red));
+      padding: .6rem 1.2rem; text-align: center;
+      font-family: 'Bangers', cursive; font-size: clamp(.7rem, 2vw, .95rem);
+      letter-spacing: .25em; color: var(--deep);
+    }
+    .ninja-card-body {
+      display: flex; gap: 1.5rem; padding: 1.5rem;
+      align-items: center;
+    }
+    .ninja-card-photo {
+      width: clamp(100px, 30vw, 160px);
+      height: clamp(120px, 35vw, 190px);
+      flex-shrink: 0; border-radius: 8px;
+      overflow: hidden; border: 2px solid var(--orange);
+    }
+    .ninja-card-photo img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .ninja-stats { flex: 1; display: flex; flex-direction: column; gap: .7rem; }
+    .stat-row { display: flex; flex-direction: column; gap: .1rem; }
+    .stat-label {
+      font-size: .6rem; letter-spacing: .25em;
+      text-transform: uppercase; color: var(--orange);
+      font-weight: 800;
+    }
+    .stat-value {
+      font-size: clamp(.85rem, 2.2vw, 1.05rem);
+      font-weight: 600;
+    }
+
+    /* ── MEMORIES GALLERY ── */
+    .gallery {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr 1fr;
+      gap: 1.2rem; max-width: 850px; width: 90%;
+    }
+    .gallery-item {
+      position: relative; border-radius: 10px; overflow: hidden;
+      border: 2px solid rgba(249,115,22,.2);
+      aspect-ratio: 3/4; cursor: pointer;
+      transition: border-color .3s, transform .3s, box-shadow .3s;
+    }
+    .gallery-item:nth-child(2) { grid-row: span 1; aspect-ratio: auto; }
+    .gallery-item:hover {
+      border-color: var(--orange); transform: translateY(-6px);
+      box-shadow: 0 12px 40px var(--orange-glow);
+    }
+    .gallery-item img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform .5s;
+    }
+    .gallery-item:hover img { transform: scale(1.08); }
+    .gallery-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(10,10,20,.85) 0%, transparent 50%);
+      display: flex; align-items: flex-end; padding: 1rem;
+      opacity: 0; transition: opacity .3s;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-overlay span {
+      font-family: 'Bangers', cursive; font-size: 1.1rem;
+      letter-spacing: .1em; color: var(--orange-light);
+    }
+
+    /* ── QUOTES ── */
+    .quotes-container {
+      display: flex; flex-direction: column; gap: 2rem;
+      max-width: 700px; width: 90%;
+    }
+    .quote-card {
+      display: flex; align-items: center; gap: 1.5rem;
+      background: var(--card-bg); border-left: 3px solid var(--orange);
+      padding: 1.5rem; border-radius: 0 10px 10px 0;
+      transition: background .3s, border-color .3s;
+    }
+    .quote-card:hover {
+      background: rgba(249,115,22,.06);
+      border-left-color: var(--chakra);
+    }
+    .quote-card:nth-child(even) { flex-direction: row-reverse; border-left: none; border-right: 3px solid var(--orange); border-radius: 10px 0 0 10px; }
+    .quote-card:nth-child(even):hover { border-right-color: var(--chakra); }
+    .quote-img {
+      width: clamp(60px, 15vw, 90px); height: clamp(60px, 15vw, 90px);
+      border-radius: 50%; flex-shrink: 0;
+      overflow: hidden; border: 2px solid var(--orange);
+      transition: box-shadow .3s;
+    }
+    .quote-card:hover .quote-img { box-shadow: 0 0 20px var(--orange-glow); }
+    .quote-img img { width: 100%; height: 100%; object-fit: cover; }
+    .quote-text {
+      font-style: italic; font-size: clamp(.9rem, 2.2vw, 1.1rem);
+      line-height: 1.7; color: rgba(255,245,225,.85);
+    }
+    .quote-author {
+      display: block; margin-top: .5rem;
+      font-style: normal; font-weight: 800;
+      font-size: .75rem; letter-spacing: .2em;
+      color: var(--orange);
+    }
+
+    /* ── MESSAGE SCROLL ── */
+    .scroll-wrap {
+      position: relative; max-width: 650px; width: 90%;
+    }
+    .scroll-roll {
+      height: 28px;
+      background: linear-gradient(180deg, #8B6914, #B8860B, #DAA520, #B8860B, #8B6914);
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.4);
+    }
+    .scroll-body {
+      background: linear-gradient(135deg, #F5E6C8, #EED9A8, #F5E6C8);
+      padding: clamp(2rem, 5vw, 3rem);
+      color: #2a1a0a; font-size: clamp(.9rem, 2.2vw, 1.1rem);
+      line-height: 1.9; position: relative;
+      box-shadow: inset 0 0 40px rgba(0,0,0,.08);
+    }
+    .scroll-body::before {
+      content: '🍥'; position: absolute; top: 1rem; right: 1.2rem;
+      font-size: 2rem; opacity: .15;
+    }
+    #typed-msg { min-height: 200px; font-family: 'Nunito', sans-serif; }
+    #type-cursor {
+      display: inline-block; width: 2px; height: 1.1em;
+      background: #8B6914; vertical-align: middle; margin-left: 2px;
+      animation: cursorBlink .7s step-end infinite;
+    }
+    @keyframes cursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    .seal {
+      position: absolute; bottom: 1.5rem; right: 1.5rem;
+      width: 55px; height: 55px; border-radius: 50%;
+      border: 3px solid #b8340a; display: flex;
+      align-items: center; justify-content: center;
+      font-size: 1.6rem; transform: rotate(-15deg);
+      opacity: 0; transition: opacity .5s;
+    }
+    .seal.show { opacity: .5; }
+
+    /* ── CELEBRATION ── */
+    .cake-area { text-align: center; margin-bottom: 2rem; }
+    .cake-emoji {
+      font-size: clamp(4rem, 12vw, 7rem);
+      display: inline-block; cursor: pointer;
+      transition: transform .2s;
+      animation: cakeFloat 3s ease-in-out infinite;
+    }
+    .cake-emoji:hover { transform: scale(1.15) rotate(-5deg); }
+    @keyframes cakeFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+    .candles-row { display: flex; justify-content: center; gap: .5rem; margin: .8rem 0; }
+    .candle-btn {
+      background: none; border: none; cursor: pointer;
+      font-size: 1.8rem; padding: .2rem;
+      transition: transform .3s; position: relative;
+    }
+    .candle-btn:hover { transform: scale(1.3); }
+    .candle-btn.blown .flame { display: none; }
+    .candle-btn.blown::after {
+      content: '💨'; position: absolute; top: -1.3rem; left: 50%;
+      transform: translateX(-50%); font-size: .9rem;
+      animation: puff .8s ease forwards;
+    }
+    @keyframes puff {
+      from { opacity:1; transform: translateX(-50%) scale(.5); }
+      to   { opacity:0; transform: translateX(-50%) scale(1.3) translateY(-15px); }
+    }
+    .candle-hint {
+      font-size: clamp(.7rem, 1.8vw, .8rem);
+      letter-spacing: .12em; color: var(--text-dim);
+      font-style: italic;
+    }
+
+    .naruto-btn {
+      display: inline-block; padding: 1rem 2.5rem;
+      background: linear-gradient(135deg, var(--orange), var(--red));
+      border: none; border-radius: 8px;
+      color: #fff; font-family: 'Bangers', cursive;
+      font-size: clamp(1rem, 3vw, 1.3rem);
+      letter-spacing: .15em; cursor: none;
+      box-shadow: 0 4px 20px var(--orange-glow);
+      transition: transform .2s, box-shadow .3s;
+    }
+    .naruto-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 35px var(--orange-glow);
+    }
+    .naruto-btn:active { transform: translateY(0) scale(.97); }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      text-align: center; padding: 3rem 1rem;
+      position: relative; z-index: 2;
+    }
+    .footer-symbol { font-size: 2.5rem; margin-bottom: .8rem; display: block; }
+    .footer-main {
+      font-size: .85rem; letter-spacing: .2em; color: var(--text-dim);
+    }
+    .footer-sub {
+      font-family: 'Bangers', cursive;
+      font-size: clamp(.9rem, 2.5vw, 1.1rem);
+      letter-spacing: .1em; color: var(--orange);
+      margin-top: .4rem;
+    }
+
+    /* ── Floating Leaves ── */
+    .leaf {
+      position: fixed; pointer-events: none; z-index: 1;
+      font-size: 1.2rem; opacity: .6;
+      animation: leafFall linear infinite;
+    }
+    @keyframes leafFall {
+      0%   { transform: translateY(-5vh) rotate(0deg); opacity: .7; }
+      100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* ── Sparkle on click ── */
+    .sparkle {
+      position: fixed; pointer-events: none; z-index: 999;
+      animation: sparklePop .7s ease forwards;
+    }
+    @keyframes sparklePop {
+      0%   { opacity:1; transform: scale(0) rotate(0); }
+      50%  { opacity:1; transform: scale(1.5) rotate(180deg); }
+      100% { opacity:0; transform: scale(0) rotate(360deg) translateY(-25px); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .ninja-card-body { flex-direction: column; text-align: center; }
+      .ninja-card-photo { width: 120px; height: 140px; }
+      .gallery { grid-template-columns: 1fr; gap: 1rem; }
+      .gallery-item { aspect-ratio: 4/3; }
+      .quote-card, .quote-card:nth-child(even) {
+        flex-direction: column; text-align: center;
+        border-left: none; border-right: none;
+        border-top: 3px solid var(--orange); border-radius: 0 0 10px 10px;
+      }
+      .headband-cloth { display: none; }
+    }
+  </style>
+</head>
+<body class="no-scroll">
+
+<!-- Canvases -->
+<canvas id="bg-canvas"></canvas>
+<canvas id="fx-canvas"></canvas>
+
+<!-- Custom Cursor -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- Floating Leaves (generated by JS) -->
+<div id="leaves-container"></div>
+
+<!-- ======================== INTRO GATE ======================== -->
+<section class="intro" id="intro">
+  <div style="position:relative">
+    <div class="intro-ring"></div>
+    <div class="intro-symbol">🍥</div>
+  </div>
+  <div class="mission-text">
+    <span class="mission-label">Classified Mission</span>
+    <h1 class="mission-title">CELEBRATE<br>CHITTI</h1>
+    <span class="mission-rank">RANK: S-CLASS &middot; STATUS: TOP SECRET</span>
+  </div>
+  <button class="accept-btn" id="accept-btn">ACCEPT MISSION</button>
+</section>
+
+<!-- ======================== MAIN SITE ======================== -->
+<div id="main-content">
+
+  <!-- HERO -->
+  <section class="section hero" id="hero">
+    <span class="hero-sub reveal">WISHING THE HAPPIEST</span>
+    <h1 class="hero-title reveal">BIRTHDAY</h1>
+    <div class="headband-wrap reveal">
+      <div class="headband-cloth left"></div>
+      <div class="headband-plate">
+        <div class="plate-screw tl"></div>
+        <div class="plate-screw tr"></div>
+        <div class="plate-screw bl"></div>
+        <div class="plate-screw br"></div>
+        <span class="headband-symbol">🍥</span>
+        <span class="headband-name">CHITTI</span>
+      </div>
+      <div class="headband-cloth right"></div>
+    </div>
+    <p class="hero-decree reveal">By decree of the Hokage, this day shall be celebrated across all Five Great Nations!</p>
+  </section>
+
+  <!-- NINJA CARD -->
+  <section class="section" id="card-section">
+    <h2 class="section-title reveal">Ninja Registration</h2>
+    <div class="ninja-card reveal">
+      <div class="ninja-card-header">HIDDEN LEAF VILLAGE &mdash; OFFICIAL SHINOBI FILE</div>
+      <div class="ninja-card-body">
+        <div class="ninja-card-photo">
+          <img src="src/image.jpeg" alt="Chitti" loading="lazy"/>
+        </div>
+        <div class="ninja-stats">
+          <div class="stat-row"><span class="stat-label">Name</span><span class="stat-value">Chitti</span></div>
+          <div class="stat-row"><span class="stat-label">Rank</span><span class="stat-value">Legendary Kunoichi</span></div>
+          <div class="stat-row"><span class="stat-label">Village</span><span class="stat-value">Hidden Leaf</span></div>
+          <div class="stat-row"><span class="stat-label">Special Ability</span><span class="stat-value">Making Everyone Smile</span></div>
+          <div class="stat-row"><span class="stat-label">Status</span><span class="stat-value" style="color:var(--sage)">Birthday Legend ★</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEMORIES -->
+  <section class="section" id="memories-section">
+    <h2 class="section-title reveal">Mission Memories</h2>
+    <div class="gallery reveal">
+      <div class="gallery-item">
+        <img src="src/image.jpeg" alt="Memory" loading="lazy"/>
+        <div class="gallery-overlay"><span></span></div>
+      </div>
+      <div class="gallery-item">
+        <img src="src/image2.jpeg" alt="Memory" loading="lazy"/>
+        <div class="gallery-overlay"><span></span></div>
+      </div>
+      <div class="gallery-item">
+        <img src="src/image3.jpeg" alt="Memory" loading="lazy"/>
+        <div class="gallery-overlay"><span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NARUTO QUOTES -->
+  <section class="section" id="quotes-section">
+    <h2 class="section-title reveal">Words from the Greatest Ninja  </h2>
+    <div class="quotes-container">
+      <div class="quote-card reveal">
+        <div class="quote-img"><img src="src/image5.jpg" alt="Naruto" loading="lazy"/></div>
+        <p class="quote-text">"I'm not gonna run away. I never go back on my word. That's my ninja way!"<span class="quote-author">&mdash; Naruto Uzumaki</span></p>
+      </div>
+      <div class="quote-card reveal">
+        <div class="quote-img"><img src="src/image4.jpg" alt="Naruto" loading="lazy"/></div>
+        <p class="quote-text">"When people are protecting something truly special to them, they truly can become as strong as they can be."<span class="quote-author">&mdash; Naruto Uzumaki</span></p>
+      </div>
+      <div class="quote-card reveal">
+        <div class="quote-img"><img src="src/image6.jpg" alt="Naruto" loading="lazy"/></div>
+        <p class="quote-text">"If you don't like your destiny, don't accept it. Instead, have the courage to change it the way you want it to be!"<span class="quote-author">&mdash; Naruto Uzumaki</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BIRTHDAY MESSAGE -->
+  <section class="section" id="message-section">
+    <h2 class="section-title reveal">A Scroll from the Hokage</h2>
+    <div class="scroll-wrap reveal" id="scroll-wrap">
+      <div class="scroll-roll"></div>
+      <div class="scroll-body">
+        <p id="typed-msg"><span id="type-cursor"></span></p>
+        <div class="seal" id="seal">🍥</div>
+      </div>
+      <div class="scroll-roll"></div>
+    </div>
+  </section>
+
+  <!-- CELEBRATION -->
+  <section class="section" id="celebration-section">
+    <h2 class="section-title reveal">Make a Birthday Wish</h2>
+    <div class="cake-area reveal">
+      <span class="cake-emoji" id="cake-emoji">🎂</span>
+      <div class="candles-row" id="candles-row"></div>
+      <p class="candle-hint" id="candle-hint">Click the candles to use your Wind Style jutsu! 💨</p>
+    </div>
+    <button class="naruto-btn reveal" id="celebrate-btn">✦ RASENGAN CELEBRATION ✦</button>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <span class="footer-symbol">🍥</span>
+    <p class="footer-main">Made with Chakra &hearts; for Chitti</p>
+    <p class="footer-sub">Believe It! &middot; Dattebayo!</p>
+  </footer>
+</div>
+
+<script>
+/* =================================================================
+   CONFIG
+   ================================================================= */
+const BIRTHDAY_MESSAGE =
+  "Dear Chitti,\n\n" +
+  "Happy Birthday! Today the entire ninja world celebrates YOU!\n\n" +
+  "Just like Naruto taught us \u2014 with hard work and a big heart, anything is possible. " +
+  "Your smile is more powerful than a Thousand Shadow Clones, and your spirit burns brighter than the Will of Fire itself.\n\n" +
+  "May this year bring you endless adventures, ramen-level happiness, and love from all Five Great Nations. " +
+  "Never forget \u2014 you are legendary.\n\n" +
+  "Believe it! \ud83c\udf65";
+
+/* =================================================================
+   DOM REFS
+   ================================================================= */
+const $ = s => document.querySelector(s);
+const intro       = $('#intro');
+const acceptBtn   = $('#accept-btn');
+const bgCanvas    = $('#bg-canvas');
+const fxCanvas    = $('#fx-canvas');
+const bgCtx       = bgCanvas.getContext('2d');
+const fxCtx       = fxCanvas.getContext('2d');
+const cursorDot   = $('#cursor-dot');
+const cursorRing  = $('#cursor-ring');
+
+/* =================================================================
+   RESIZE CANVASES
+   ================================================================= */
+function resizeCanvas() {
+  bgCanvas.width = fxCanvas.width = innerWidth;
+  bgCanvas.height = fxCanvas.height = innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+/* =================================================================
+   CURSOR
+   ================================================================= */
+let mx = innerWidth / 2, my = innerHeight / 2, rx = mx, ry = my;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursorDot.style.left = mx + 'px';
+  cursorDot.style.top  = my + 'px';
+
+  const dot = document.createElement('div');
+  dot.className = 'trail-dot';
+  const sz = 3 + Math.random() * 3;
+  dot.style.cssText = `left:${mx}px;top:${my}px;width:${sz}px;height:${sz}px;background:rgba(249,115,22,${.4+Math.random()*.3});`;
+  document.body.appendChild(dot);
+  setTimeout(() => dot.remove(), 500);
+});
+
+(function ringFollow() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  cursorRing.style.left = rx + 'px';
+  cursorRing.style.top  = ry + 'px';
+  requestAnimationFrame(ringFollow);
+})();
+
+/* =================================================================
+   STARS BACKGROUND
+   ================================================================= */
+const stars = Array.from({length: 200}, () => ({
+  x: Math.random() * innerWidth,
+  y: Math.random() * innerHeight,
+  r: Math.random() * 1.4 + 0.3,
+  a: Math.random(),
+  speed: Math.random() * 0.004 + 0.002,
+  phase: Math.random() * Math.PI * 2
+}));
+
+function drawStars(t) {
+  stars.forEach(s => {
+    const alpha = 0.2 + 0.6 * (0.5 + 0.5 * Math.sin(t * s.speed * 60 + s.phase));
+    bgCtx.beginPath();
+    bgCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    bgCtx.fillStyle = `rgba(255,245,225,${alpha * s.a})`;
+    bgCtx.fill();
+  });
+}
+
+/* =================================================================
+   SHOOTING SHURIKEN (replacing shooting stars)
+   ================================================================= */
+let shurikens = [];
+function spawnShuriken() {
+  shurikens.push({
+    x: Math.random() * innerWidth, y: 0,
+    speed: 6 + Math.random() * 8,
+    angle: 25 + Math.random() * 25,
+    spin: 0, spinSpeed: 15 + Math.random() * 10,
+    life: 1
+  });
+}
+setInterval(spawnShuriken, 3500);
+
+function drawShurikens() {
+  shurikens = shurikens.filter(s => s.life > 0);
+  shurikens.forEach(s => {
+    const rad = s.angle * Math.PI / 180;
+    s.x += Math.cos(rad) * s.speed;
+    s.y += Math.sin(rad) * s.speed;
+    s.spin += s.spinSpeed;
+    s.life -= 0.015;
+
+    bgCtx.save();
+    bgCtx.translate(s.x, s.y);
+    bgCtx.rotate(s.spin * Math.PI / 180);
+    bgCtx.globalAlpha = s.life;
+
+    const sz = 6;
+    bgCtx.strokeStyle = '#ccc';
+    bgCtx.lineWidth = 1.5;
+    bgCtx.beginPath();
+    for (let i = 0; i < 4; i++) {
+      const a = (i * Math.PI) / 2;
+      bgCtx.moveTo(0, 0);
+      bgCtx.lineTo(Math.cos(a) * sz, Math.sin(a) * sz);
+    }
+    bgCtx.stroke();
+
+    bgCtx.beginPath();
+    bgCtx.arc(0, 0, 2, 0, Math.PI * 2);
+    bgCtx.fillStyle = '#888';
+    bgCtx.fill();
+
+    bgCtx.restore();
+  });
+}
+
+/* =================================================================
+   BACKGROUND ANIMATION LOOP
+   ================================================================= */
+(function bgLoop(t) {
+  bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+  drawStars(t);
+  drawShurikens();
+  requestAnimationFrame(bgLoop);
+})(0);
+
+/* =================================================================
+   RASENGAN PARTICLES (click FX)
+   ================================================================= */
+let particles = [];
+const rasenganColors = ['#3B82F6','#60A5FA','#93C5FD','#BFDBFE','#2563EB','#818CF8','#FFF'];
+
+function rasenganBurst(ox, oy, count = 60) {
+  for (let i = 0; i < count; i++) {
+    const angle = (i / count) * Math.PI * 4 + Math.random() * 0.5;
+    const speed = 1.5 + Math.random() * 7;
+    particles.push({
+      x: ox, y: oy,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      size: 2 + Math.random() * 5,
+      color: rasenganColors[Math.floor(Math.random() * rasenganColors.length)],
+      life: 1,
+      spin: Math.random() * 360,
+      spinSpeed: (Math.random() - 0.5) * 8
+    });
+  }
+}
+
+function confettiBurst(ox, oy, count = 120) {
+  const colors = ['#F97316','#FB923C','#3B82F6','#EF4444','#22C55E','#FBBF24','#FFF'];
+  for (let i = 0; i < count; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 2 + Math.random() * 8;
+    particles.push({
+      x: ox ?? Math.random() * fxCanvas.width,
+      y: oy ?? -10,
+      vx: ox != null ? Math.cos(angle) * speed : (Math.random() - 0.5) * 5,
+      vy: ox != null ? Math.sin(angle) * speed : 2 + Math.random() * 4,
+      size: 3 + Math.random() * 6,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      life: 1,
+      spin: Math.random() * 360,
+      spinSpeed: (Math.random() - 0.5) * 10
+    });
+  }
+}
+
+(function fxLoop() {
+  fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+  particles = particles.filter(p => p.life > 0);
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    p.vy += 0.06;
+    p.spin += p.spinSpeed;
+    p.life -= 0.008;
+    fxCtx.save();
+    fxCtx.globalAlpha = p.life;
+    fxCtx.translate(p.x, p.y);
+    fxCtx.rotate(p.spin * Math.PI / 180);
+    fxCtx.fillStyle = p.color;
+    fxCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+    fxCtx.restore();
+  });
+  requestAnimationFrame(fxLoop);
+})();
+
+/* =================================================================
+   CLICK → RASENGAN BURST + SPARKLE
+   ================================================================= */
+const sparkleChars = ['✦','✧','⚡','🍥','🌀','✨'];
+document.addEventListener('click', e => {
+  if (e.target.closest('button') || e.target.closest('.candle-btn') || e.target.closest('.gallery-item')) return;
+  rasenganBurst(e.clientX, e.clientY, 40);
+
+  const s = document.createElement('div');
+  s.className = 'sparkle';
+  s.textContent = sparkleChars[Math.floor(Math.random() * sparkleChars.length)];
+  s.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;font-size:${1 + Math.random()}rem;color:var(--chakra);`;
+  document.body.appendChild(s);
+  setTimeout(() => s.remove(), 700);
+});
+
+/* =================================================================
+   FLOATING LEAVES
+   ================================================================= */
+(function spawnLeaves() {
+  const container = $('#leaves-container');
+  const leafChars = ['🍃','🍂','🍃','🌿'];
+  for (let i = 0; i < 15; i++) {
+    const leaf = document.createElement('div');
+    leaf.className = 'leaf';
+    leaf.textContent = leafChars[Math.floor(Math.random() * leafChars.length)];
+    leaf.style.left = Math.random() * 100 + '%';
+    leaf.style.animationDuration = (10 + Math.random() * 15) + 's';
+    leaf.style.animationDelay = (Math.random() * 20) + 's';
+    leaf.style.fontSize = (0.8 + Math.random() * 0.8) + 'rem';
+    container.appendChild(leaf);
+  }
+})();
+
+/* =================================================================
+   INTRO → MAIN TRANSITION
+   ================================================================= */
+acceptBtn.addEventListener('click', e => {
+  e.stopPropagation();
+  intro.classList.add('exit');
+  document.body.classList.remove('no-scroll');
+
+  confettiBurst(null, null, 150);
+  setTimeout(() => confettiBurst(null, null, 100), 400);
+
+  setTimeout(() => { intro.style.display = 'none'; }, 900);
+});
+
+/* =================================================================
+   SCROLL REVEAL (Intersection Observer)
+   ================================================================= */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+/* =================================================================
+   TYPEWRITER MESSAGE
+   ================================================================= */
+let typingStarted = false;
+const msgObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && !typingStarted) {
+      typingStarted = true;
+      startTyping();
+      msgObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+msgObserver.observe($('#scroll-wrap'));
+
+function startTyping() {
+  const el = $('#typed-msg');
+  const cursor = $('#type-cursor');
+  const seal = $('#seal');
+  let i = 0;
+
+  function type() {
+    if (i < BIRTHDAY_MESSAGE.length) {
+      const ch = BIRTHDAY_MESSAGE[i++];
+      if (ch === '\n') {
+        el.insertBefore(document.createElement('br'), cursor);
+      } else {
+        const span = document.createElement('span');
+        span.textContent = ch;
+        el.insertBefore(span, cursor);
+      }
+      const delay = ch === '\n' ? 300 : (ch === '.' || ch === '!' || ch === ',') ? 150 : 25 + Math.random() * 20;
+      setTimeout(type, delay);
+    } else {
+      cursor.remove();
+      seal.classList.add('show');
+    }
+  }
+  type();
+}
+
+/* =================================================================
+   INTERACTIVE CANDLES
+   ================================================================= */
+(function initCandles() {
+  const row = $('#candles-row');
+  const hint = $('#candle-hint');
+  let lit = 5;
+
+  for (let i = 0; i < 5; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'candle-btn';
+    btn.innerHTML = '<span class="flame">🕯️</span>';
+    btn.title = 'Use Wind Style!';
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (btn.classList.contains('blown')) return;
+      btn.classList.add('blown');
+      btn.querySelector('.flame').style.opacity = '0';
+      lit--;
+      if (lit === 0) {
+        hint.textContent = '🎉 All candles out! Your wish is granted, Dattebayo!';
+        rasenganBurst(innerWidth / 2, innerHeight / 2, 120);
+        confettiBurst(null, null, 200);
+        const cakeEl = $('#cake-emoji');
+        cakeEl.textContent = '✨';
+        setTimeout(() => cakeEl.textContent = '🎂', 2500);
+      } else {
+        hint.textContent = `${lit} candle${lit > 1 ? 's' : ''} left \u2014 keep going! \ud83d\udca8`;
+      }
+    });
+    row.appendChild(btn);
+  }
+})();
+
+/* =================================================================
+   CELEBRATE BUTTON
+   ================================================================= */
+$('#celebrate-btn').addEventListener('click', e => {
+  e.stopPropagation();
+  for (let i = 0; i < 6; i++) {
+    setTimeout(() => {
+      const x = Math.random() * innerWidth;
+      const y = Math.random() * innerHeight * 0.5;
+      rasenganBurst(x, y, 80);
+      confettiBurst(x, y, 60);
+    }, i * 300);
+  }
+});
+
+/* =================================================================
+   CAKE CLICK
+   ================================================================= */
+$('#cake-emoji').addEventListener('click', e => {
+  e.stopPropagation();
+  const r = e.target.getBoundingClientRect();
+  rasenganBurst(r.left + r.width / 2, r.top + r.height / 2, 60);
+});
+</script>
+</body>
+</html>
